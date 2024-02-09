@@ -181,13 +181,12 @@ class VertexCacheBase:
     def __init__(self):
 
         self.cache = collections.OrderedDict()
+        self.cache_list = []
         self.nfev = 0  # Feasible points
         self.index = -1
 
     def __iter__(self):
-        for v in self.cache:
-            yield self.cache[v]
-        return
+        return iter(self.cache_list)
 
     def size(self):
         """Returns the size of the vertex cache."""
@@ -311,9 +310,10 @@ class VertexCacheField(VertexCacheBase):
                                g_cons=self.g_cons,
                                g_cons_args=self.g_cons_args)
 
-            self.cache[x] = xval  # Define in cache
-            self.gpool.add(xval)  # Add to pool for processing feasibility
-            self.fpool.add(xval)  # Add to pool for processing field values
+            self.cache[x] = xval            # Define in cache
+            self.cache_list.append(xval)
+            self.gpool.add(xval)            # Add to pool for processing feasibility
+            self.fpool.add(xval)            # Add to pool for processing field values
             return self.cache[x]
 
     def __getstate__(self):
